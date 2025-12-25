@@ -140,9 +140,11 @@
         </div>
     </div>
 
-    <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/299551611&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&enable_api=true"
-        style="display:none;">
+    <!-- SoundCloud widget corregido: -->
+    <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no"
+        allow="autoplay; encrypted-media"
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/299551611&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false"
+        style="position:absolute; left:-9999px; width:1px; height:1px; border:0;">
     </iframe>
     <script src="https://w.soundcloud.com/player/api.js"></script>
 
@@ -365,6 +367,8 @@
                 card.classList.add('active');
             }, 800);
 
+            // Intentamos reproducir. Esta llamada sucede dentro del evento de click del usuario,
+            // lo que permite que iOS/Safari permita la reproducción.
             widget.play();
             widget.setVolume(80);
             
