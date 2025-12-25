@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Espectáculo Navideño Inolvidable 2025</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- AMBIENTE --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #020205; /* Casi negro */
+            overflow: hidden;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* LIENZO MÁGICO */
+        #sky-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+        }
+
+        /* --- PORTADA (COBERTURA) --- */
+        #intro-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #2a0a0a 0%, #000000 90%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1.5s ease;
+        }
+
+        #intro-layer h1 {
+            font-family: 'Great Vibes', cursive;
+            color: #fff;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #FF0000;
+            animation: titlePulse 2s infinite alternate;
+        }
+
+        /* Botón de Cristal */
+        .prism-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transition: 0.3s;
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .prism-btn:hover {
+            background: #fff;
+            color: #000;
+            box-shadow: 0 0 50px #fff;
+            transform: scale(1.1);
+        }
+
+        /* --- ESCENARIO DE LA POSTAL --- */
+        #card-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 50;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #card-container.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .shiny-frame {
+            position: relative;
+            padding: 15px;
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .card-pic {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .msg-footer {
+            margin-top: 15px;
+            color: #fff;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 5px #000;
+        }
+
+        @keyframes titlePulse {
+            from { text-shadow: 0 0 20px #FFD700; transform: scale(1); }
+            to { text-shadow: 0 0 40px #FFD700, 0 0 10px #fff; transform: scale(1.05); }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <canvas id="sky-canvas"></canvas>
+
+    <div id="intro-layer">
+        <h1>Abre este regalo hermoso<br>esta Navidad,<br>es para ti</h1>
+        <button class="prism-btn" id="launch-btn">✨ VER ESPECTÁCULO ✨</button>
+    </div>
+
+    <div id="card-container">
+        <div class="shiny-frame">
+            <a href="https://ibb.co/JRcNXywN" target="_blank">
+                <img src="https://i.ibb.co/27FwXs1w/Que-este-2025-tengas-una-Navidad-especial-con-muchas-bendiciones.png" alt="Bendiciones 2025" class="card-pic">
+            </a>
+            <div class="msg-footer">Disfruta la magia de la Navidad</div>
+        </div>
+    </div>
+
+    <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/299551611&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&enable_api=true"
+        style="display:none;">
+    </iframe>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+
+    <script>
+        /** MOTOR DE ESPECTÁCULO VISUAL **/
+        const canvas = document.getElementById('sky-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h;
+
+        let fireworks = [];
+        let particles = [];
+        let stars = []; // Nieve dendrítica
+
+        // Colores Vibrantes para Fuegos Artificiales
+        const colors = [
+            '#ff0043', /* Rojo Rubí */
+            '#14fc56', /* Verde Neón */
+            '#1e90ff', /* Azul Dodger */
+            '#ffff00', /* Amarillo Puro */
+            '#ff00ff', /* Magenta */
+            '#00ffff', /* Cian */
+            '#ffffff', /* Blanco Brillante */
+            '#ffa500'  /* Naranja */
+        ];
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // --- CLASE: COPO DE NIEVE (CRISTAL) ---
+        class CrystalSnow {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h - h;
+                this.size = Math.random() * 2 + 1;
+                this.speed = Math.random() * 0.5 + 0.2; 
+                this.angle = Math.random() * Math.PI * 2;
+                this.spin = (Math.random() - 0.5) * 0.02;
+                this.amp = Math.random() * 30 + 10; // Amplitud sinoidal
+                this.freq = Math.random() * 0.01 + 0.005;
+                this.initialX = this.x;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.angle += this.spin;
+                this.x = this.initialX + Math.sin(this.y * this.freq) * this.amp;
+
+                if(this.y > h + 20) {
+                    this.y = -20;
+                    this.initialX = Math.random() * w;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+                ctx.lineWidth = 1;
+                
+                // Dibujar forma de estrella de 6 puntas
+                for(let i=0; i<6; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0,0);
+                    ctx.lineTo(0, this.size * 3);
+                    ctx.stroke();
+                    ctx.rotate(Math.PI/3);
+                }
+                ctx.restore();
+            }
+        }
+
+        // --- CLASE: COHETE (SUBIDA) ---
+        class Rocket {
+            constructor() {
+                this.x = Math.random() * w;
+                this.y = h;
+                this.targetY = Math.random() * (h * 0.4) + (h * 0.1);
+                this.speed = Math.random() * 3 + 8; // Rápido al inicio
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.trail = [];
+                this.active = true;
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.speed *= 0.98; // Desaceleración por gravedad
+
+                // Estela
+                this.trail.push({x: this.x, y: this.y, alpha: 1});
+                if(this.trail.length > 8) this.trail.shift();
+
+                if(this.y <= this.targetY || this.speed < 1) {
+                    this.explode();
+                    this.active = false;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                // Dibujar estela
+                this.trail.forEach(t => {
+                    t.alpha -= 0.1;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${t.alpha})`;
+                    ctx.fillRect(t.x, t.y, 2, 2);
+                });
+                
+                // Cabeza
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI*2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            explode() {
+                // Crear explosión masiva
+                const particleCount = 60 + Math.random() * 40;
+                // Efecto Flash en el cielo
+                ctx.fillStyle = "rgba(255,255,255,0.1)";
+                ctx.fillRect(0,0,w,h);
+
+                for(let i=0; i<particleCount; i++) {
+                    particles.push(new FireworkParticle(this.x, this.y, this.color));
+                }
+            }
+        }
+
+        // --- CLASE: PARTÍCULA DE EXPLOSIÓN ---
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                // Velocidad explosiva variada para dar volumen esférico
+                const speed = Math.random() * 6; 
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.gravity = 0.08;
+                this.friction = 0.96;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.015 + 0.005;
+                this.sparkle = Math.random() < 0.3; // 30% tienen brillo extra
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                
+                // Efecto Glitter/Centelleo
+                if(this.sparkle && Math.random() > 0.5) {
+                    ctx.fillStyle = "#FFF"; 
+                }
+
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI*2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // --- INICIALIZAR NIEVE ---
+        for(let i=0; i<60; i++) stars.push(new CrystalSnow());
+
+        // --- BUCLE DE ANIMACIÓN ---
+        function loop() {
+            // Fondo semitransparente para efecto de rastro (Motion Blur)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, w, h);
+
+            // 1. Dibujar Nieve
+            stars.forEach(s => { s.update(); s.draw(); });
+
+            // 2. Lanzar Cohetes (Probabilidad alta para "Espectáculo")
+            if(Math.random() < 0.06) {
+                fireworks.push(new Rocket());
+            }
+
+            // 3. Actualizar Cohetes
+            fireworks = fireworks.filter(f => f.active);
+            fireworks.forEach(f => { f.update(); f.draw(); });
+
+            // 4. Actualizar Explosiones
+            particles = particles.filter(p => p.alpha > 0);
+            particles.forEach(p => { p.update(); p.draw(); });
+
+            requestAnimationFrame(loop);
+        }
+        loop();
+
+        // --- INTERACCIÓN ---
+        const btn = document.getElementById('launch-btn');
+        const intro = document.getElementById('intro-layer');
+        const card = document.getElementById('card-container');
+        const widget = SC.Widget(document.getElementById('sc-widget'));
+
+        btn.addEventListener('click', () => {
+            intro.style.opacity = 0;
+            setTimeout(() => { intro.style.display = 'none'; }, 1500);
+
+            setTimeout(() => {
+                card.classList.add('active');
+            }, 800);
+
+            widget.play();
+            widget.setVolume(80);
+            
+            // Intensificar la nieve al abrir
+            for(let i=0; i<40; i++) stars.push(new CrystalSnow());
+        });
+
+    </script>
+</body>
+</html>
